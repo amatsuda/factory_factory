@@ -1,0 +1,41 @@
+# This command finds existing models in the DB, and outputs factories to STDOUT
+# Examples:
+#
+# % script/factory users 1
+# => outputs factories for user 1
+# % script/factory users 1 2
+# => outputs factories for users 1, 2
+# % script/factory users 2,3
+# => outputs factories for users 2, 3
+# % script/factory users 1..4
+# => outputs factories for users 1, 2, 3, 4
+# % script/factory users :all
+# => outputs factories for all users
+# % script/factory users
+# => outputs factories for all users
+
+module ActiveRecord
+  class Base
+    def to_factory
+      returning '' do |s|
+        model_alias = self.class.table_name.first
+        s << "Factory.define :#{self.class.table_name}_#{send self.class.primary_key}, :class => #{self.class} do |#{model_alias}|\n"
+        self.class.content_columns.each do |clm|
+         s << %Q[  #{model_alias}.#{clm.name} '#{send clm.name}'\n]
+        end
+        s << "end\n"
+      end
+    end
+  end
+end
+
+def find_param(argv)
+  return :all if argv.blank?
+  argv.gsub!(' ', ',') if argv.is_a?(String) && argv.include?(' ')
+  argv.gsub!(',,', ',') if argv.is_a?(String)
+  val = eval("a = #{argv}")
+  val.is_a?(Range) ? val.to_a : val
+end
+
+model_class = ARGV.shift.classify.constantize
+model_class.find(find_param(ARGV.join(','))).to_a.each {|m| puts "#{m.to_factory}\n"}
