@@ -1,17 +1,17 @@
 # This command finds existing models in the DB, and outputs factories to STDOUT
 # Examples:
 #
-# % script/factory users 1
+# % script/factory.sh users 1
 # => outputs factories for user 1
-# % script/factory users 1 2
+# % script/factory.sh users 1 2
 # => outputs factories for users 1, 2
-# % script/factory users 2,3
+# % script/factory.sh users 2,3
 # => outputs factories for users 2, 3
-# % script/factory users 1..4
+# % script/factory.sh users 1..4
 # => outputs factories for users 1, 2, 3, 4
-# % script/factory users :all
+# % script/factory.sh users :all
 # => outputs factories for all users
-# % script/factory users
+# % script/factory.sh users
 # => outputs factories for all users
 
 module ActiveRecord
