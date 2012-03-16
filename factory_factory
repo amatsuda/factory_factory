@@ -23,6 +23,9 @@ module ActiveRecord
       self.class.content_columns.reject {|c| %w[created_at updated_at].include? c.name}.each do |clm|
         s << %Q[    #{clm.name} '#{send clm.name}'\n]
       end
+      self.class.reflect_on_all_associations.reject {|c| c.collection?}.each do |clm|
+        s << %Q[    #{clm.name} nil\n]
+      end
       s << "  end\n"
       s << "end\n"
     end
