@@ -19,7 +19,7 @@ module ActiveRecord
     def to_factory
       s = ''
       s << "FactoryGirl.define do\n"
-      s << "  factory :#{self.class.table_name}_#{send self.class.primary_key}, :class => #{self.class} do\n"
+      s << "  factory :#{self.class.table_name.singularize}_#{send self.class.primary_key}, :class => #{self.class} do\n"
       self.class.content_columns.reject {|c| %w[created_at updated_at].include? c.name}.each do |clm|
         s << %Q[    #{clm.name} '#{send clm.name}'\n]
       end
