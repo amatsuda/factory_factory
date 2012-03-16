@@ -17,14 +17,13 @@
 module ActiveRecord
   class Base
     def to_factory
-      returning '' do |s|
-        model_alias = self.class.table_name.first
-        s << "Factory.define :#{self.class.table_name}_#{send self.class.primary_key}, :class => #{self.class} do |#{model_alias}|\n"
-        self.class.content_columns.each do |clm|
-         s << %Q[  #{model_alias}.#{clm.name} '#{send clm.name}'\n]
-        end
-        s << "end\n"
+      model_alias = self.class.table_name.first
+      s = ''
+      s << "Factory.define :#{self.class.table_name}_#{send self.class.primary_key}, :class => #{self.class} do |#{model_alias}|\n"
+      self.class.content_columns.each do |clm|
+        s << %Q[  #{model_alias}.#{clm.name} '#{send clm.name}'\n]
       end
+      s << "end\n"
     end
   end
 end
